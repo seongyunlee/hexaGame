@@ -1,0 +1,85 @@
+@charset "UTF-8";
+html {
+  width: 100%;
+  height: 100%;
+}
+body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+.fixed-ratio {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: aquamarine;
+}
+.board {
+  align-self: center;
+  justify-self: center;
+  align-content: stretch;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.triangle-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.triangle {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: relative;
+  margin-top: 2.5rem;
+  border-left: 5rem solid transparent;
+  border-right: 5rem solid transparent;
+}
+.triangle.up {
+  padding-top: 2.5rem;
+  border-bottom: 8.66rem solid #666666;
+}
+.triangle.down {
+  padding-bottom: 2.5rem;
+  border-top: 8.66rem solid #666666;
+}
+.triangle::after {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  left: -4.2em;
+  border-left: 4.2rem solid transparent;
+  border-right: 4.2rem solid transparent;
+}
+.triangle.up::after {
+  top: 0.6928rem;
+  padding-top: 2.5rem;
+  border-bottom: 7.2744rem solid #ffffff;
+}
+
+.triangle.down::after {
+  padding-bottom: 2.5rem;
+  top: -7.9672em;
+  border-top: 7.2744rem solid #ffffff;
+}
+.triangle.up.mouse-up {
+  border-bottom-color: #ffff00;
+}
+.triangle.down.mouse-up {
+  border-top-color: #ffff00;
+}
+.triangle.down.owned::after {
+  border-top-color: #ff0000;
+}
+.triangle.up.owned::after {
+  border-bottom-color: #ff0000;
+}

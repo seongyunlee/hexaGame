@@ -1,0 +1,408 @@
+<html lang="en" class="macos desktop landscape" style="font-size: 13.86px">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Poker Now - Poker with Friends</title>
+    <script
+      type="text/javascript"
+      async=""
+      src="https://www.gstatic.com/recaptcha/releases/mq0-U1BHZ5YTcoDC-CvsLPNc/recaptcha__ko.js"
+      crossorigin="anonymous"
+      integrity="sha384-BKCO01YlGC+XIXoR3qgjDMukk/nd7AfH5PB2DotunRopBCPIZnZ8Xc1TTX+ihP5w"
+    ></script>
+    <script
+      type="text/javascript"
+      async=""
+      src="https://www.google-analytics.com/analytics.js"
+    ></script>
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script>
+      window.RECAPTCHA_SITE_KEY = "6LcC1ukUAAAAAECqd8XUfKsHuwJ8EDwY2GHCO9J5";
+      window.INVISIBLE_RECAPTCHA_SITE_KEY =
+        "6LcVSzoUAAAAADE31DtB12I0oYA9UuTEb_bnHuvt";
+      window.NETWORK_PUBLIC_URL = "https://network.pokernow.club";
+      window.GEO_DOMAIN = "https://aws.pokernow.club";
+
+      window.gameID = undefined;
+      window.locked = null;
+    </script>
+    <script>
+      window._rollbarConfig = {
+        accessToken: "d7fcd6885f2f4d83914ee90545fb0ee0",
+        captureUncaught: true,
+        captureUnhandledRejections: true,
+        server: {
+          root: "webpack:///./",
+        },
+        transform: function (payload) {
+          const trace = payload.body.trace;
+
+          const locRegex = /\/\/[\w|\.\:]+(.*)/;
+
+          if (trace && trace.frames) {
+            for (var i = 0; i < trace.frames.length; i++) {
+              var filename = trace.frames[i].filename;
+
+              if (filename) {
+                const m = filename.match(locRegex);
+                trace.frames[i].filename = "https://dynamichost" + m[1];
+              }
+            }
+          }
+        },
+        payload: {
+          environment: "production",
+          client: {
+            javascript: {
+              source_map_enabled: true,
+              code_version: "2022-08-16T11:29:51.656Z",
+              guess_uncaught_frames: true,
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.rollbar.com/rollbarjs/refs/tags/v2.24.0/rollbar.min.js"></script>
+    <script>
+      window.GOOGLE_ANALYTICS = "UA-109238632-1";
+    </script>
+    <script
+      async=""
+      src="https://www.googletagmanager.com/gtag/js?id=UA-109238632-1"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-109238632-1");
+    </script>
+    <link
+      rel="manifest"
+      href="https://cdn.pokernow.club/app-manifest-f9ca2a48b76378177019.json"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&amp;family=Mulish:wght@200;300;400;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://cdn.pokernow.club/favicon-cd2bc2773f4f49ce85f0.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.pokernow.club/apple-touch-icon-96f0b73b11f008e7edc0.png"
+    />
+    <meta name="theme-color" content="#272727" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=no"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      property="og:title"
+      content="Poker Now - New Game - Poker with friends"
+    />
+    <meta
+      property="og:description"
+      content="Start to play free private online poker with your friends! No download and no registration needed. Up to 10 people with video/voice chat."
+    />
+    <meta
+      name="description"
+      content="Start to play free private poker home game online with your friends! No download and no registration needed. Up to 10 people with video/voice chat."
+    />
+    <meta
+      property="og:image"
+      content="https://cdn.pokernow.club/banner-og-8eb033de592e7ac2082c.jpg"
+    />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="697" />
+    <meta property="og:image:height" content="697" />
+    <script
+      defer="defer"
+      src="https://cdn.pokernow.club/runtime.bundle-5d3e8beac35db9923b5a.js"
+    ></script>
+    <script
+      defer="defer"
+      src="https://cdn.pokernow.club/vendor.bundle-a4b1a1bb77f3e640ca4d.js"
+    ></script>
+    <script
+      defer="defer"
+      src="https://cdn.pokernow.club/compatibility.bundle-decc1f9b6ed33fc3116f.js"
+    ></script>
+    <script
+      defer="defer"
+      src="https://cdn.pokernow.club/game.bundle-4e03035635cd46dfd115.js"
+    ></script>
+    <link
+      href="https://cdn.pokernow.club/game-eeddbef881410d66a98b.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="main-container">
+      <div id="canvas" style="width: 770px; height: 433.125px">
+        <div class="game-main-container two-color" style="display: block">
+          <div class="external-club-infos-ctn">
+            <div class="username"><a href="/profile">서울 이성윤</a></div>
+            <div class="logout">
+              <a href="/sign_out" class="logout-button">Logout</a>
+            </div>
+          </div>
+          <div class="top-buttons">
+            <button type="button" class="top-buttons-button options">
+              Options
+            </button>
+          </div>
+          <div class="game-infos">
+            <p class="owner-table-name">Owner: ddd</p>
+            <div class="blind-value-ctn">
+              <p class="blind-value">
+                NLH <small>~</small>
+                <span class="chips-value"
+                  ><span class="normal-value">10</span></span
+                >
+                /
+                <span class="chips-value"
+                  ><span class="normal-value">20</span></span
+                >
+              </p>
+            </div>
+          </div>
+          <div class="table">
+            <div class="table-warning-ctn waiting-players-ctn">
+              <p>
+                <strong>Waiting Players.</strong> Click below to copy the link
+                and send to your friends.
+              </p>
+              <input
+                type="text"
+                readonly=""
+                value="https://www.pokernow.club/games/pglGqOxU2lBl5PX-cz4A4MAsR"
+              />
+            </div>
+            <p class="top-pot-warning"></p>
+            <div class="table-pot-size">
+              <div class="main-value">
+                <span class="chips-value"
+                  ><span class="normal-value">0</span></span
+                >
+              </div>
+              <div class="add-on-container hidden">
+                <p class="add-on">
+                  <small>total</small>
+                  <span class="chips-value"
+                    ><span class="normal-value">0</span></span
+                  >
+                </p>
+              </div>
+            </div>
+            <p class="table-game-type">No Limit Texas Hold'em</p>
+            <div class="table-cards run-1"></div>
+            <div class="seats">
+              <div class="table-player table-player-seat table-player-1">
+                <p class="table-player-seat-position-number">1</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+              <div class="table-player table-player-seat table-player-2">
+                <p class="table-player-seat-position-number">2</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+              <div class="table-player table-player-seat table-player-3">
+                <p class="table-player-seat-position-number">3</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+              <div class="table-player table-player-seat table-player-4">
+                <p class="table-player-seat-position-number">4</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+              <div class="table-player table-player-seat table-player-5">
+                <p class="table-player-seat-position-number">5</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+              <div class="table-player table-player-seat table-player-6">
+                <p class="table-player-seat-position-number">6</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+              <div class="table-player table-player-seat table-player-7">
+                <p class="table-player-seat-position-number">7</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+              <div class="table-player table-player-seat table-player-8">
+                <p class="table-player-seat-position-number">8</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+              <div class="table-player table-player-seat table-player-9">
+                <p class="table-player-seat-position-number">9</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+              <div class="table-player table-player-seat table-player-10">
+                <p class="table-player-seat-position-number">10</p>
+                <button class="table-player-seat-button" type="button">
+                  Sit
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="top-right-buttons">
+            <div
+              class="sound-control-button-container with-tip-top-right-button-ctn"
+            >
+              <p class="tip">Effects Volume</p>
+              <button
+                class="button-1 dark-gray small-button sound-control-button sound-med"
+                type="button"
+              >
+                Sound
+              </button>
+            </div>
+          </div>
+          <a href="#" class="version-link version-link-in-game"
+            >version 0.1.70</a
+          ><a
+            href="https://ko-fi.com/pokernow"
+            target="_blank"
+            class="help-link-game"
+            >Tip the dealer! ❤</a
+          ><button
+            class="button-1 show-log-button small-button dark-gray"
+            type="button"
+          >
+            Log / Ledger
+          </button>
+          <div class="game-decisions-ctn">
+            <div class="out-game-decisions action-buttons"></div>
+          </div>
+          <div class="chat" style="visibility: visible">
+            <div class="chat-container">
+              <div class="chat-messages-container" style="display: block">
+                <div class="chat-messages-list invisible-scrollbar">
+                  <div class="chat-message-container highlight">
+                    <p class="message-ballon">
+                      <span
+                        >👋 Your donation helps to keep this app free and
+                        without ads.
+                        <strong
+                          ><a href="/partner-link?id=xs0M7rhDJs" target="_blank"
+                            >Click here to support Poker Now</a
+                          ></strong
+                        >.</span
+                      >
+                      <small>23:27</small>
+                    </p>
+                    <p class="description">
+                      <span class="author" style="color: rgb(225, 249, 253)"
+                        >Poker Now</span
+                      >
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="chat-messages-container" style="display: none">
+                <div class="chat-messages-blank-slate">
+                  <p>
+                    It's a bit quiet here.<span
+                      ><br />Click on the balloon and send a Message!</span
+                    >
+                  </p>
+                </div>
+                <div class="chat-messages-list invisible-scrollbar"></div>
+              </div>
+              <button type="button" class="chat-expand-button">
+                Expand/Collapse</button
+              ><button type="button" class="chat-new-message-button with-tip">
+                New Message
+              </button>
+            </div>
+          </div>
+          <div class="conf-controls">
+            <button type="button" class="conf-control mic low" timeout="100">
+              Toggle Mic</button
+            ><button
+              type="button"
+              class="conf-control camera low"
+              timeout="100"
+            >
+              Toggle Camera
+            </button>
+          </div>
+        </div>
+        <div class="placeholder-background hidden"></div>
+      </div>
+    </div>
+    <div id="jitsi-container"></div>
+    <script
+      src="https://www.google.com/recaptcha/api.js?onload=onloadcallback&amp;render=explicit"
+      async=""
+    ></script>
+    <div
+      style="
+        visibility: hidden;
+        position: absolute;
+        width: 100%;
+        top: -10000px;
+        left: 0px;
+        right: 0px;
+        transition: visibility 0s linear 0.3s, opacity 0.3s linear 0s;
+        opacity: 0;
+      "
+    >
+      <div
+        style="
+          width: 100%;
+          height: 100%;
+          position: fixed;
+          top: 0px;
+          left: 0px;
+          z-index: 2000000000;
+          background-color: rgb(255, 255, 255);
+          opacity: 0.5;
+        "
+      ></div>
+      <div
+        style="
+          margin: 0px auto;
+          top: 0px;
+          left: 0px;
+          right: 0px;
+          position: absolute;
+          border: 1px solid rgb(204, 204, 204);
+          z-index: 2000000000;
+          background-color: rgb(255, 255, 255);
+          overflow: hidden;
+        "
+      >
+        <iframe
+          title="reCAPTCHA&nbsp;보안문자 2분 후 만료"
+          src="https://www.google.com/recaptcha/api2/bframe?hl=ko&amp;v=mq0-U1BHZ5YTcoDC-CvsLPNc&amp;k=6LcVSzoUAAAAADE31DtB12I0oYA9UuTEb_bnHuvt"
+          name="c-3sso76y3aekm"
+          frameborder="0"
+          scrolling="no"
+          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"
+          style="width: 100%; height: 100%"
+        ></iframe>
+      </div>
+    </div>
+  </body>
+</html>
