@@ -11,6 +11,7 @@ body {
   justify-items: center;
 }
 .fixed-ratio {
+  position: relative;
   width: 100%;
   display: flex;
   align-items: center;
@@ -19,12 +20,23 @@ body {
   background-color: aquamarine;
 }
 .board {
+  position: relative;
   align-self: center;
   justify-self: center;
   align-content: stretch;
   padding: 10px;
   display: flex;
   flex-direction: column;
+}
+.start_btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #ff0000;
+  border-radius: 4rem;
+  width: 100rem;
+  height: 30rem;
+  transform: translate(-50%, -50%);
 }
 .triangle-line {
   display: flex;
@@ -42,6 +54,35 @@ body {
   margin-top: 2.5rem;
   border-left: 5rem solid transparent;
   border-right: 5rem solid transparent;
+}
+player-seat {
+  position: absolute;
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  width: 40rem;
+  height: 20rem;
+}
+player-seat#box_1,
+player-seat#box_2,
+player-seat#box_3 {
+  left: 20rem;
+}
+player-seat#box_4,
+player-seat#box_5,
+player-seat#box_6 {
+  right: 20rem;
+}
+player-seat#box_1,
+player-seat#box_4 {
+  top: 5%;
+}
+player-seat#box_2,
+player-seat#box_5 {
+  top: 45%;
+}
+player-seat#box_3,
+player-seat#box_6 {
+  bottom: 5%;
 }
 .triangle.up {
   padding-top: 2.5rem;
@@ -82,4 +123,14 @@ body {
 }
 .triangle.up.owned::after {
   border-bottom-color: #ff0000;
+}
+.start_btn {
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10rem;
+  border-style: solid;
+  border-color: black;
+  border-radius: 1rem;
 }
