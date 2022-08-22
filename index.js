@@ -17,26 +17,34 @@ let numUsers = 0;
 var cells = [];
 var players = [null, null, null, null, null, null];
 var turn = null;
+var round = null;
 let isGameStart = false;
-
+const getGameInfo = () => {
+  return { isGameStart, players, turn, round };
+};
+const initGame = () => {
+  console.log("init game");
+  initCells();
+  turn = 0;
+  round = 0;
+  players = [null, null, null, null, null, null];
+  isGameStart = false;
+};
 const initCells = () => {
   cells = [];
   const cnt = [11, 13, 15, 17, 19, 19, 17, 15, 13, 11];
   for (var r = 0; r < 10; r++) {
     var line = [];
     for (var i = 0; i < cnt[r]; i++) {
-      line.push(false);
+      line.push(null);
     }
     cells.push(line);
   }
 };
-const getGameInfo = () => {
-  return [isGameStart, players, turn];
-};
-const initGame = () => {
-  initCells();
-  players = [false, false, false, false, false, false];
-  gameStart = true;
+
+const startGame = () => {
+  isGameStart = true;
+  selectMode = "choose_action";
 };
 const getUpperColDif = (row) => {
   if (row == 5) return 0;
@@ -50,6 +58,7 @@ const getDownColDif = (row) => {
 };
 const checkHexa = (row, col) => {
   //upper Hexa //the origin is lower center
+  var cnt = [0, 0, 0, 0, 0, 0];
   if (
     row <= 0 ||
     row >= cells.length ||
@@ -60,12 +69,21 @@ const checkHexa = (row, col) => {
   if (((row > 4) + col) % 2 != 0) return false; // not checking for down cell
   for (var r = row - 1; r <= row; r++) {
     for (var c = col - 1; c <= col + 1; c++) {
-      if (!cells[r][c + (r == row ? 0 : getUpperColDif(row))]) {
-        return false;
-      }
+      cnt[cells[r][c + (r == row ? 0 : getUpperColDif(row))]] += 1;
     }
   }
-  return true;
+  if (
+    cnt.filter((e) => {
+      return e != 0;
+    }).length > 2
+  )
+    return true;
+  for (var i = 0; i < cnt.length; i++) {
+    if (cnt[i] > 3) {
+      return true;
+    }
+  }
+  return false;
 };
 const offHexa = (row, col) => {
   for (var r = row - 1; r <= row; r++) {
@@ -84,30 +102,51 @@ const checkHexaAround = (row, col) => {
       }
     }
   }
-  onHexaList.map(([r, c]) => {
-    offHexa(r, c);
-  });
+  return onHexaList;
 };
 io.on("connection", (socket) => {
   numUsers++;
   console.log("user connected", numUsers);
   if (numUsers == 1) {
     initCells();
+    initGame();
   }
   io.emit("game_info", getGameInfo());
   io.emit("board_status", cells);
   socket.on("click_cell", (data) => {
-    const [r, c] = data.split(" ").map((e) => parseInt(e));
-    cells[r][c] = !cells[r][c];
-    checkHexaAround(r, c);
-    io.emit("board_status", cells);
+    console.log(data);
+    if (data.player != turn) {
+      console.log("당신의 차례가 아닙니다");
+      socket.emit("notice", "당신의 차례가 아닙니다");
+      return;
+    }
+    const [r, c] = data.pos.split(" ").map((e) => parseInt(e));
+    cells[r][c] = data.player;
+    var hexa = checkHexaAround(r, c);
+    if (hexa.length > 1) {
+      io.emit("game_info", {
+        ...getGameInfo(),
+        selectMode: "hexa_select",
+        hexaList: hexa,
+      });
+    } else if (hexa.length == 1) {
+      io.emit("notice", "전염병 발생");
+
+      io.emit("board_status", cells);
+      io.emit("game_info", getGameInfo());
+    } else {
+      turn = turn == 1 ? 0 : turn + 1;
+      io.emit("board_status", cells);
+      io.emit("game_info", getGameInfo());
+    }
   });
   socket.on("disconnect", () => {
     --numUsers;
   });
   socket.on("start_game", () => {
-    initGame();
+    startGame();
     io.emit("game_info", getGameInfo());
+    io.emit("board_status", cells);
   });
   socket.on("take_seat", (data) => {
     console.log("setat", data - 1);
@@ -115,7 +154,13 @@ io.on("connection", (socket) => {
     players[data - 1] = true;
     socket.mySeat = data - 1;
     console.log(getGameInfo());
+    socket.emit("seat_confirm", data - 1);
     io.emit("game_info", getGameInfo());
+  });
+  socket.on("reset", (data) => {
+    initGame();
+    io.emit("game_info", getGameInfo());
+    io.emit("board_status", cells);
   });
 });
 

@@ -6,6 +6,7 @@
   </head>
   <body>
     <div class="fixed-ratio">
+      <button class="reset" onclick="socket.emit('reset');">R</button>
       <div class="board"></div>
       <player-seat id="box_1"></player-seat>
       <player-seat id="box_2"></player-seat>
@@ -13,19 +14,18 @@
       <player-seat id="box_4"></player-seat>
       <player-seat id="box_5"></player-seat>
       <player-seat id="box_6"></player-seat>
-      <div class="start_btn"><h2>시작</h2></div>
+      <div class="start_btn">시작</div>
     </div>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/main.js"></script>
-    <script>
-      class Player extends HTMLElement {
-        connectedCallBack() {
-          let name = document.createElement("label");
-          this.appendChild(name);
-        }
-      }
-      customElements.define("player-seat", Player);
-    </script>
   </body>
+  <script>
+    class Player extends HTMLElement {
+      constructor() {
+        super();
+      }
+    }
+    customElements.define("player-seat", Player);
+  </script>
 </html>

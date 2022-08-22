@@ -1,4 +1,5 @@
 var cells = [];
+var hexBtns = [];
 const cell_colors = [
   "#ffffd9",
   "#ffdc00",
@@ -8,6 +9,8 @@ const cell_colors = [
   "#77788b",
 ];
 const socket = io();
+var mySeat = null;
+var nowTurn = null;
 
 const onClickSeat = (seat_id) => {
   socket.emit("take_seat", seat_id.slice(-1));
@@ -20,9 +23,9 @@ const setSeat = () => {
     );
   }
 };
-const onClickStart = () => {
+const initStartBtn = () => {
   const start_btn = document.querySelector(".start_btn");
-  start_btn.addEventListener("click", () => socket.emit("start_game"));
+  start_btn.addEventListener("click", () => socket.emit("start_game", {}));
 };
 function onMouseOverCell(event) {
   event.target.classList.add("mouse-up");
@@ -31,7 +34,10 @@ function onMouseOutCell(event) {
   event.target.classList.remove("mouse-up");
 }
 const onClickCell = (event) => {
-  socket.emit("click_cell", event.target.getAttribute("value"));
+  socket.emit("click_cell", {
+    pos: event.target.getAttribute("value"),
+    player: mySeat,
+  });
 };
 function setBoardSize() {
   var board = document.querySelector(".fixed-ratio");
@@ -46,7 +52,25 @@ function setBoard() {
   var board = document.querySelector(".board");
   for (var i = 0; i < 10; i++) {
     board.appendChild(makeBoardLine(i));
+    if (i != 9) {
+      board.appendChild(makeBtnLine(i));
+    }
   }
+}
+function makeBtnLine(idx) {
+  const cnt = [5, 6, 7, 8, 9, 8, 7, 6, 5];
+  var btn_line = [];
+  var line = document.createElement("div");
+  line.setAttribute("class", "btn-line");
+  for (var i = 0; i < cnt[idx]; i++) {
+    var btn = document.createElement("div");
+    btn.setAttribute("class", "hex-btn");
+    btn.setAttribute("value", `${idx} ${i}`);
+    line.appendChild(btn);
+    btn_line.push(btn);
+  }
+  hexBtns.push(btn_line);
+  return line;
 }
 function makeBoardLine(idx) {
   const cnt = [11, 13, 15, 17, 19, 19, 17, 15, 13, 11];
@@ -69,32 +93,54 @@ function makeBoardLine(idx) {
   cells.push(cell_line);
   return line;
 }
-
-const setSeatPlayer = (players) => {
-  console.log(players);
-  players.map((seated, idx) => {
-    if (seated) {
+const hexaSelect = (list) => {
+  console.log(list);
+};
+const setSeatPlayer = (data) => {
+  console.log(data.players);
+  data.players.map((seated, idx) => {
+    if (seated == true) {
       const seat = document.querySelector(`player-seat#box_${idx + 1}`);
       seat.innerHTML = "SEATED";
+      if (idx == mySeat) {
+        seat.style.borderColor = "#ff0000";
+      }
+    } else {
+      const seat = document.querySelector(`player-seat#box_${idx + 1}`);
+      seat.innerHTML = "";
     }
   });
+  if (data.isGameStart) {
+    const playerSeats = document.querySelectorAll("player-seat");
+    for (var i = 0; i < playerSeats.length; i++) {
+      playerSeats[i].style.background =
+        playerSeats[i].getAttribute("id").slice(-1) == data.turn + 1
+          ? "#f0f000"
+          : "#ffffff";
+    }
+  }
 };
 const setGameStartBtn = (isGameStart, players) => {
   const startBtn = document.querySelector(".start_btn");
   startBtn.style.visibility =
-    !isGameStart && players.filter((e) => e == true).length > 1
+    !isGameStart &&
+    players.filter((e) => {
+      return e == true;
+    }).length > 1
       ? "visible"
       : "hidden";
 };
-const setGameInfo = ([isGameStart, players, turn]) => {
-  setSeatPlayer(players);
-  setGameStartBtn(isGameStart, players);
+const setGameInfo = (data) => {
+  setSeatPlayer(data);
+  setGameStartBtn(data.isGameStart, data.players);
+  nowTurn = data.turn;
 };
 socket.on("board_status", (data) => {
   for (var r = 0; r < data.length; r++) {
     for (var c = 0; c < data[r].length; c++) {
-      if (data[r][c]) {
+      if (data[r][c] != null) {
         cells[r][c].classList.add("owned");
+        cells[r][c].classList.add(`color${data[r][c]}`);
       } else {
         cells[r][c].classList.remove("owned");
       }
@@ -102,13 +148,21 @@ socket.on("board_status", (data) => {
   }
 });
 socket.on("game_info", (data) => {
+  if (data.selectMode == "hexa_select") {
+    hexaSelect(data.hexaList);
+  }
   console.log(data);
   setGameInfo(data);
 });
+socket.on("notice", (data) => {
+  console.log(data);
+  alert(data);
+});
+socket.on("seat_confirm", (data) => (mySeat = data));
 setRootFontSize();
 setBoardSize();
 setBoard();
 setSeat();
-setGameStartBtn();
+initStartBtn();
 addEventListener("resize", setBoardSize);
 addEventListener("resize", setRootFontSize);

@@ -10,6 +10,13 @@ body {
   align-items: center;
   justify-items: center;
 }
+.reset {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 14rem;
+  height: 14rem;
+}
 .fixed-ratio {
   position: relative;
   width: 100%;
@@ -17,7 +24,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: aquamarine;
+  background-color: #0c5a38;
 }
 .board {
   position: relative;
@@ -38,13 +45,30 @@ body {
   height: 30rem;
   transform: translate(-50%, -50%);
 }
+.btn-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.hex-btn {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1.5rem;
+  border-width: 1rem;
+  background-color: white;
+  border-color: #000000;
+  border-style: solid;
+  margin-inline: 7.5rem;
+}
 .triangle-line {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
 }
 .triangle {
   content: "";
@@ -104,26 +128,44 @@ player-seat#box_6 {
 .triangle.up::after {
   top: 0.6928rem;
   padding-top: 2.5rem;
-  border-bottom: 7.2744rem solid #ffffff;
+  border-bottom: 7.2744rem solid #000000;
 }
 
 .triangle.down::after {
   padding-bottom: 2.5rem;
   top: -7.9672em;
-  border-top: 7.2744rem solid #ffffff;
+  border-top: 7.2744rem solid #000000;
 }
-.triangle.up.mouse-up {
-  border-bottom-color: #ffff00;
+.triangle.mouse-up {
+  border-bottom-color: #c44f30;
+  border-top-color: #c44f30;
 }
-.triangle.down.mouse-up {
-  border-top-color: #ffff00;
+
+.triangle.owned.color0::after {
+  border-top-color: #ffdc00;
+  border-bottom-color: #ffdc00;
 }
-.triangle.down.owned::after {
-  border-top-color: #ff0000;
+.triangle.owned.color1::after {
+  border-top-color: #ffffd9;
+  border-bottom-color: #ffffd9;
 }
-.triangle.up.owned::after {
-  border-bottom-color: #ff0000;
+.triangle.owned.color2::after {
+  border-top-color: #09ff5e;
+  border-bottom-color: #09ff5e;
 }
+.triangle.owned.color3::after {
+  border-top-color: #fb4f0e;
+  border-bottom-color: #fb4f0e;
+}
+.triangle.owned.color4::after {
+  border-top-color: #21c2fe;
+  border-bottom-color: #21c2fe;
+}
+.triangle.owned.color5::after {
+  border-top-color: #77788b;
+  border-bottom-color: #77788b;
+}
+
 .start_btn {
   visibility: hidden;
   display: flex;
