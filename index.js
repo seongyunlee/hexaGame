@@ -101,13 +101,14 @@ io.on("connection", (socket) => {
   });
   socket.on("medicine", (data) => {
     console.log("medicine", data);
+    if (hand_deck.length == 0) return;
     const { type, name } = card_info[hand_deck.pop() - 1];
     handList[data - 1].push(`${type} ${name}`);
     io.emit("game_info", getGameInfo());
   });
   socket.on("use_card", (data) => {
     try {
-      console.log("use card", data, handList[data.player][data.idx].charAt(0));
+      console.log("use card", data);
       if (handList[data.player][data.idx].charAt(0) == "예") {
         preventCnt[data.player] += 1;
       }
