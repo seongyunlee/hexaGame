@@ -46,7 +46,7 @@ function setBoardSize() {
 }
 function setRootFontSize() {
   var html = document.querySelector("html");
-  html.style.fontSize = `${window.innerWidth / 350}px`;
+  html.style.fontSize = `${window.innerWidth / 450}px`;
 }
 function setBoard() {
   var board = document.querySelector(".board");
@@ -56,6 +56,7 @@ function setBoard() {
       board.appendChild(makeBtnLine(i));
     }
   }
+  setBtnText();
 }
 function makeBtnLine(idx) {
   const cnt = [5, 6, 7, 8, 9, 8, 7, 6, 5];
@@ -66,6 +67,7 @@ function makeBtnLine(idx) {
     var btn = document.createElement("div");
     btn.setAttribute("class", "hex-btn");
     btn.setAttribute("value", `${idx} ${i}`);
+    btn.style.visibility = "hidden";
     line.appendChild(btn);
     btn_line.push(btn);
   }
@@ -96,6 +98,21 @@ function makeBoardLine(idx) {
 const hexaSelect = (list) => {
   console.log(list);
 };
+const setBtnText = () => {
+  hexBtns[2][3].innerHTML = "1";
+  hexBtns[3][5].innerHTML = "2";
+  hexBtns[5][5].innerHTML = "3";
+  hexBtns[6][3].innerHTML = "4";
+  hexBtns[5][2].innerHTML = "5";
+  hexBtns[3][2].innerHTML = "6";
+
+  hexBtns[2][3].style.visibility = "visible";
+  hexBtns[3][5].style.visibility = "visible";
+  hexBtns[5][5].style.visibility = "visible";
+  hexBtns[6][3].style.visibility = "visible";
+  hexBtns[5][2].style.visibility = "visible";
+  hexBtns[3][2].style.visibility = "visible";
+};
 const setSeatPlayer = (data) => {
   console.log(data.players);
   data.players.map((seated, idx) => {
@@ -114,7 +131,7 @@ const setSeatPlayer = (data) => {
     const playerSeats = document.querySelectorAll("player-seat");
     for (var i = 0; i < playerSeats.length; i++) {
       playerSeats[i].style.background =
-        playerSeats[i].getAttribute("id").slice(-1) == data.turn + 1
+        playerSeats[i].getAttribute("id").slice(-1) == data.turn
           ? "#f0f000"
           : "#ffffff";
     }
