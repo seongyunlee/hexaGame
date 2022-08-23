@@ -85,7 +85,7 @@ const setPlayerCard = (list) => {
       card.setAttribute("idx", idx);
       card.addEventListener("click", (e) =>
         socket.emit("use_card", {
-          player: e.target.getAttribute("player") + 1,
+          player: e.target.getAttribute("player"),
           idx: e.target.getAttribute("idx"),
         })
       );

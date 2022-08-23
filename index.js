@@ -110,7 +110,7 @@ io.on("connection", (socket) => {
     if (handList[data.player][data.idx].charAt(0) == "예") {
       preventCnt[data.player] += 1;
     }
-    handList[data.player - 1].splice(data.idx, 1);
+    handList[data.player].splice(data.idx, 1);
     io.emit("game_info", getGameInfo());
   });
   io.emit("game_info", getGameInfo());
