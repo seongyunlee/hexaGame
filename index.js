@@ -2,39 +2,48 @@ const express = require("express");
 const http = require("http");
 const app = express();
 const path = require("path");
-const { off } = require("process");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const { checkConnect } = require("./script/hexa.js");
-const e = require("express");
+const card_info = require("./cards.json");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function (req, res) {
   res.send("Hello World!");
 });
 
-let numPlayers = 0;
+let numUser = 0;
 var cells = [];
-var players = [null, null, null, null, null, null];
-var turn = null;
-var round = null;
-let isGameStart = false;
-var turnMode = null;
-var cellClickList = [];
+var clients = [];
+var handList = [[], [], [], [], [], []];
+var preventCnt = [0, 0, 0, 0, 0, 0];
+var pendemic_card = [];
+var hand_deck = [];
 const getGameInfo = () => {
-  return { isGameStart, players, turn, round, turnMode };
+  return {
+    numUser,
+    handList,
+    preventCnt,
+    pendemic_left: pendemic_card.length,
+    deck_left: hand_deck.length,
+  };
 };
 const initGame = () => {
-  console.log("init game");
+  handList = [[], [], [], [], [], []];
+  pendemic_card = [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8];
+  hand_deck = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1, 2, 3, 4, 5, 6, 7, 8,
+    9, 10, 11, 12, 13, 14, 15,
+  ];
+  pendemic_card.sort(() => Math.random() - 0.5);
+  hand_deck.sort(() => Math.random() - 0.5);
   initCells();
-  turn = 1;
-  round = 0;
-  numPlayers = 0;
-  turnMode = "user_action";
-  cellClickList = [];
-  players = [null, null, null, null, null, null];
-  isGameStart = false;
+  userConnection();
+};
+const userConnection = () => {
+  for (var i = 0; i < clients.length; i++) {
+    clients[i].emit("user_no", i + 1);
+  }
 };
 const initCells = () => {
   cells = [];
@@ -48,43 +57,23 @@ const initCells = () => {
   }
 };
 
-const startGame = () => {
-  isGameStart = true;
-  turnMode = "choose_action";
-  numPlayers = players.filter((e) => {
-    return e != null;
-  }).length;
-};
-
-const nextTurn = () => {
-  cellClickList = [];
-  if (turnMode == "pendemic") {
-    turnMode = "choose_action";
-    turn = 1;
-  } else if (turn == numPlayers) {
-    turnMode = "pendemic";
-  } else {
-    turn += 1;
-  }
-};
 const cellClick = (data) => {
-  //check wrong order
-  if (data.player != turn) {
-    return false;
-  }
-  //fill the cell
-  const [r, c] = data.pos.split(" ").map((e) => parseInt(e));
+  const [r, c] = data.pos.split(" ");
   if (cells[r][c] == null) {
     cells[r][c] = data.player;
-    cellClickList.push([r, c]);
-    return true;
+  } else {
+    cells[r][c] = null;
   }
-  return false;
 };
 
 //socket-io setting
 io.on("connection", (socket) => {
   //onconnection
+  clients.push(socket);
+  userConnection();
+  if (clients.length == 1) {
+    initGame();
+  }
   io.emit("game_info", getGameInfo());
   io.emit("board_status", cells);
 
@@ -97,44 +86,42 @@ io.on("connection", (socket) => {
     io.emit("board_status", cells);
   });
 
-  //seat click
-  socket.on("take_seat", (data) => {
-    console.log("setat", data);
-    if (players[data - 1] != null) return;
-    players[data - 1] = true;
-    socket.mySeat = data;
-    console.log(getGameInfo());
-    socket.emit("seat_confirm", data);
-    io.emit("game_info", getGameInfo());
-  });
-
-  //start button click
-  socket.on("start_game", () => {
-    startGame();
-    io.emit("game_info", getGameInfo());
-    io.emit("board_status", cells);
-  });
-
   //click cell
   socket.on("click_cell", (data) => {
-    if (turnMode == "choose_action") {
-      var chk = cellClick(data);
-      if (chk == true) {
-        if (checkConnect(cells, cellClickList, data.player)) {
-          io.emit("game_info", getGameInfo());
-          socket.emit("notice", "한 칸 더 선택 하세요.");
-        } else {
-          nextTurn();
-        }
-        io.emit("board_status", cells);
-        io.emit("game_info", getGameInfo());
-      } else {
-        socket.emit("notice", "잘못된 선택입니다.");
-      }
-    }
+    cellClick(data);
+    io.emit("board_status", cells);
+    io.emit("game_info", getGameInfo());
   });
-
-  socket.on("disconnect", () => {});
+  socket.on("pendemic", (data) => {
+    io.emit("pendemic", {
+      img_src: `https://s3.ap-northeast-2.amazonaws.com/mmmclone.test2.s3/cards/${pendemic_card.pop()}.png`,
+      pos: Math.floor(Math.random() * 6 + 1),
+    });
+    io.emit("game_info", getGameInfo());
+  });
+  socket.on("medicine", (data) => {
+    console.log("medicine", data);
+    const { type, name } = card_info[hand_deck.pop() - 1];
+    handList[data - 1].push(`${type} ${name}`);
+    io.emit("game_info", getGameInfo());
+  });
+  socket.on("use_card", (data) => {
+    console.log(
+      "use card",
+      data,
+      handList[data.player - 1][data.idx].charAt(0)
+    );
+    if (handList[data.player - 1][data.idx].charAt(0) == "예") {
+      preventCnt[data.player - 1] += 1;
+    }
+    handList[data.player - 1].splice(data.idx, 1);
+    io.emit("game_info", getGameInfo());
+  });
+  io.emit("game_info", getGameInfo());
+  socket.on("disconnect", () => {
+    clients.splice(clients.indexOf(socket), 1);
+    console.log("disconnet", clients.length);
+  });
 });
 
 var port = 80;

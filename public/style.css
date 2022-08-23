@@ -35,21 +35,57 @@ body {
   display: flex;
   flex-direction: column;
 }
-.start_btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  background-color: #ff0000;
-  border-radius: 4rem;
-  width: 100rem;
-  height: 30rem;
-  transform: translate(-50%, -50%);
+
+.hand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  margin-bottom: 2rem;
+}
+.hand:hover {
+  background-color: white;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1rem;
 }
 .btn-line {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+.player-seat {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+}
+.prevent-cnt {
+  display: flex;
+  width: 7rem;
+  height: 7rem;
+  border-radius: 3.5rem;
+  font-size: 6rem;
+  margin-left: 2rem;
+  justify-self: flex-start;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  content: "0";
+}
+.card {
+  display: flex;
+  position: absolute;
+  left: 22%;
+  width: 30rem;
+  height: 50rem;
+  background-color: white;
+}
+.card.pendemic {
+  top: 5%;
+}
+.card.medicine {
+  bottom: 5%;
 }
 .hex-btn {
   display: flex;
@@ -81,35 +117,54 @@ body {
   border-left: 5rem solid transparent;
   border-right: 5rem solid transparent;
 }
-player-seat {
-  position: absolute;
+.player-box {
+  display: relative;
   background-color: #ffffff;
   border-radius: 1.5rem;
-  width: 40rem;
-  height: 20rem;
+  width: 50rem;
+  min-height: 20rem;
 }
-player-seat#box_1,
-player-seat#box_2,
-player-seat#box_3 {
+.player-box#box_1 {
+  background-color: #ffdc00;
+}
+.player-box#box_2 {
+  background-color: #ffffd9;
+}
+.player-box#box_3 {
+  background-color: #09ff5e;
+}
+.player-box#box_4 {
+  background-color: #fb4f0e;
+}
+.player-box#box_5 {
+  background-color: #21c2fe;
+}
+.player-box#box_6 {
+  background-color: #77788b;
+}
+.player-seat#box_1,
+.player-seat#box_2,
+.player-seat#box_3 {
   left: 20rem;
 }
-player-seat#box_4,
-player-seat#box_5,
-player-seat#box_6 {
+.player-seat#box_4,
+.player-seat#box_5,
+.player-seat#box_6 {
   right: 20rem;
 }
-player-seat#box_1,
-player-seat#box_4 {
+.player-seat#box_1,
+.player-seat#box_4 {
   top: 5%;
 }
-player-seat#box_2,
-player-seat#box_5 {
+.player-seat#box_2,
+.player-seat#box_5 {
   top: 45%;
 }
-player-seat#box_3,
-player-seat#box_6 {
+.player-seat#box_3,
+.player-seat#box_6 {
   bottom: 5%;
 }
+
 .triangle.up {
   padding-top: 2.5rem;
   border-bottom: 8.66rem solid #666666;
@@ -143,38 +198,62 @@ player-seat#box_6 {
   border-top-color: #c44f30;
 }
 
-.triangle.owned.color0::after {
+.triangle.owned.color1::after {
   border-top-color: #ffdc00;
   border-bottom-color: #ffdc00;
 }
-.triangle.owned.color1::after {
+.triangle.owned.color2::after {
   border-top-color: #ffffd9;
   border-bottom-color: #ffffd9;
 }
-.triangle.owned.color2::after {
+.triangle.owned.color3::after {
   border-top-color: #09ff5e;
   border-bottom-color: #09ff5e;
 }
-.triangle.owned.color3::after {
+.triangle.owned.color4::after {
   border-top-color: #fb4f0e;
   border-bottom-color: #fb4f0e;
 }
-.triangle.owned.color4::after {
+.triangle.owned.color5::after {
   border-top-color: #21c2fe;
   border-bottom-color: #21c2fe;
 }
-.triangle.owned.color5::after {
+.triangle.owned.color6::after {
   border-top-color: #77788b;
   border-bottom-color: #77788b;
 }
-
-.start_btn {
-  visibility: hidden;
+.pendemic-card {
   display: flex;
+  flex-direction: column;
+  position: absolute;
+  visibility: hidden;
+  top: 50%;
+  left: 50%;
+  background-color: #ffffd9;
+  border-radius: 4rem;
   align-items: center;
   justify-content: center;
+  width: 150rem;
+  height: 180rem;
+  transform: translate(-50%, -50%);
+}
+.pendemic-image {
+  width: 70%;
+  height: 70%;
+  margin: 10rem;
+}
+.pendemic-location {
   font-size: 10rem;
+  align-items: center;
+}
+.pendemic-close {
+  font-size: 10rem;
+  align-items: center;
+  justify-content: center;
+  background-color: burlywood;
+  width: auto;
+  height: auto;
+  border-radius: 5rem;
   border-style: solid;
-  border-color: black;
-  border-radius: 1rem;
+  border-color: #000000;
 }

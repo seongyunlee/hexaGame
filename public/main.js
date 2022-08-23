@@ -1,32 +1,8 @@
 var cells = [];
 var hexBtns = [];
-const cell_colors = [
-  "#ffffd9",
-  "#ffdc00",
-  "#09ff5e",
-  "#fb4f0e",
-  "#21c2fe",
-  "#77788b",
-];
 const socket = io();
-var mySeat = null;
-var nowTurn = null;
+var my_no = null;
 
-const onClickSeat = (seat_id) => {
-  socket.emit("take_seat", seat_id.slice(-1));
-};
-const setSeat = () => {
-  const seats = document.querySelectorAll("player-seat");
-  for (var i = 0; i < seats.length; i++) {
-    seats[i].addEventListener("click", (e) =>
-      onClickSeat(e.target.getAttribute("id"))
-    );
-  }
-};
-const initStartBtn = () => {
-  const start_btn = document.querySelector(".start_btn");
-  start_btn.addEventListener("click", () => socket.emit("start_game", {}));
-};
 function onMouseOverCell(event) {
   event.target.classList.add("mouse-up");
 }
@@ -36,13 +12,13 @@ function onMouseOutCell(event) {
 const onClickCell = (event) => {
   socket.emit("click_cell", {
     pos: event.target.getAttribute("value"),
-    player: mySeat,
+    player: my_no,
   });
 };
 function setBoardSize() {
   var board = document.querySelector(".fixed-ratio");
   board.style.width = `${Math.round(window.innerWidth)}px`;
-  board.style.height = `${Math.round(board.clientWidth / 1.8)}px`;
+  board.style.height = `${Math.round(board.clientWidth / 2.2)}px`;
 }
 function setRootFontSize() {
   var html = document.querySelector("html");
@@ -95,8 +71,34 @@ function makeBoardLine(idx) {
   cells.push(cell_line);
   return line;
 }
-const hexaSelect = (list) => {
-  console.log(list);
+function closePendemicCard() {
+  document.querySelector(".pendemic-card").style.visibility = "hidden";
+}
+const setPlayerCard = (list) => {
+  for (var no = 0; no < list.length; no++) {
+    const box = document.querySelector(`.player-box#box_${no + 1}`);
+    box.innerHTML = "";
+    for (var idx = 0; idx < list[no].length; idx++) {
+      const card = document.createElement("div");
+      card.classList.add("hand");
+      card.setAttribute("player", no);
+      card.setAttribute("idx", idx);
+      card.addEventListener("click", (e) =>
+        socket.emit("use_card", {
+          player: e.target.getAttribute("player") + 1,
+          idx: e.target.getAttribute("idx"),
+        })
+      );
+      card.innerHTML = list[no][idx];
+      box.appendChild(card);
+    }
+  }
+};
+const setPreventCnt = (list) => {
+  for (var i = 0; i < list.length; i++) {
+    const counter = document.querySelector(`.prevent-cnt#id${i + 1}`);
+    counter.innerHTML = list[i];
+  }
 };
 const setBtnText = () => {
   hexBtns[2][3].innerHTML = "1";
@@ -113,45 +115,6 @@ const setBtnText = () => {
   hexBtns[5][2].style.visibility = "visible";
   hexBtns[3][2].style.visibility = "visible";
 };
-const setSeatPlayer = (data) => {
-  console.log(data.players);
-  data.players.map((seated, idx) => {
-    if (seated == true) {
-      const seat = document.querySelector(`player-seat#box_${idx + 1}`);
-      seat.innerHTML = "SEATED";
-      if (idx == mySeat) {
-        seat.style.borderColor = "#ff0000";
-      }
-    } else {
-      const seat = document.querySelector(`player-seat#box_${idx + 1}`);
-      seat.innerHTML = "";
-    }
-  });
-  if (data.isGameStart) {
-    const playerSeats = document.querySelectorAll("player-seat");
-    for (var i = 0; i < playerSeats.length; i++) {
-      playerSeats[i].style.background =
-        playerSeats[i].getAttribute("id").slice(-1) == data.turn
-          ? "#f0f000"
-          : "#ffffff";
-    }
-  }
-};
-const setGameStartBtn = (isGameStart, players) => {
-  const startBtn = document.querySelector(".start_btn");
-  startBtn.style.visibility =
-    !isGameStart &&
-    players.filter((e) => {
-      return e == true;
-    }).length > 1
-      ? "visible"
-      : "hidden";
-};
-const setGameInfo = (data) => {
-  setSeatPlayer(data);
-  setGameStartBtn(data.isGameStart, data.players);
-  nowTurn = data.turn;
-};
 socket.on("board_status", (data) => {
   for (var r = 0; r < data.length; r++) {
     for (var c = 0; c < data[r].length; c++) {
@@ -160,26 +123,41 @@ socket.on("board_status", (data) => {
         cells[r][c].classList.add(`color${data[r][c]}`);
       } else {
         cells[r][c].classList.remove("owned");
+        for (var idx = 1; idx < 7; idx++) {
+          cells[r][c].classList.remove(`color${idx}`);
+        }
       }
     }
   }
 });
 socket.on("game_info", (data) => {
-  if (data.selectMode == "hexa_select") {
-    hexaSelect(data.hexaList);
-  }
   console.log(data);
-  setGameInfo(data);
+  setPlayerCard(data.handList);
+  setPreventCnt(data.preventCnt);
+  document.querySelector(
+    ".card.medicine"
+  ).innerHTML = `방어 예방카드(${data.deck_left})`;
+  document.querySelector(
+    ".card.pendemic"
+  ).innerHTML = `펜데믹 카드(${data.pendemic_left})`;
 });
 socket.on("notice", (data) => {
   console.log(data);
   alert(data);
 });
-socket.on("seat_confirm", (data) => (mySeat = data));
+socket.on("user_no", (data) => {
+  console.log("user_no", data);
+  my_no = data;
+});
+socket.on("pendemic", (data) => {
+  document.querySelector(".pendemic-image").setAttribute("src", data.img_src);
+  document.querySelector(
+    ".pendemic-location"
+  ).innerHTML = `${data.pos} 지역에 전염병 발생`;
+  document.querySelector(".pendemic-card").style.visibility = "visible";
+});
 setRootFontSize();
 setBoardSize();
 setBoard();
-setSeat();
-initStartBtn();
 addEventListener("resize", setBoardSize);
 addEventListener("resize", setRootFontSize);
