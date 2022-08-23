@@ -95,7 +95,7 @@ io.on("connection", (socket) => {
   socket.on("pendemic", (data) => {
     io.emit("pendemic", {
       img_src: `https://s3.ap-northeast-2.amazonaws.com/mmmclone.test2.s3/pendemic/${pendemic_card.pop()}.png`,
-      pos: Math.floor(Math.random() * 6 + 1),
+      pos: Math.floor(Math.random() * 12 + 1),
     });
     io.emit("game_info", getGameInfo());
   });
