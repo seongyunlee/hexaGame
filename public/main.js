@@ -114,6 +114,22 @@ const setBtnText = () => {
   hexBtns[6][3].style.visibility = "visible";
   hexBtns[5][2].style.visibility = "visible";
   hexBtns[3][2].style.visibility = "visible";
+
+  hexBtns[0][2].innerHTML = "13";
+  hexBtns[2][0].innerHTML = "10";
+  hexBtns[2][6].innerHTML = "8";
+  hexBtns[4][4].innerHTML = "7";
+  hexBtns[6][0].innerHTML = "9";
+  hexBtns[6][6].innerHTML = "11";
+  hexBtns[8][2].innerHTML = "12";
+
+  hexBtns[0][2].style.visibility = "visible";
+  hexBtns[2][0].style.visibility = "visible";
+  hexBtns[2][6].style.visibility = "visible";
+  hexBtns[4][4].style.visibility = "visible";
+  hexBtns[6][0].style.visibility = "visible";
+  hexBtns[6][6].style.visibility = "visible";
+  hexBtns[8][2].style.visibility = "visible";
 };
 socket.on("board_status", (data) => {
   for (var r = 0; r < data.length; r++) {
