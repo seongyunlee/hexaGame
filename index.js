@@ -106,11 +106,15 @@ io.on("connection", (socket) => {
     io.emit("game_info", getGameInfo());
   });
   socket.on("use_card", (data) => {
-    console.log("use card", data, handList[data.player][data.idx].charAt(0));
-    if (handList[data.player][data.idx].charAt(0) == "예") {
-      preventCnt[data.player] += 1;
+    try {
+      console.log("use card", data, handList[data.player][data.idx].charAt(0));
+      if (handList[data.player][data.idx].charAt(0) == "예") {
+        preventCnt[data.player] += 1;
+      }
+      handList[data.player].splice(data.idx, 1);
+    } catch (e) {
+      console.log(e);
     }
-    handList[data.player].splice(data.idx, 1);
     io.emit("game_info", getGameInfo());
   });
   io.emit("game_info", getGameInfo());
